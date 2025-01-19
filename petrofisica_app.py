@@ -4,8 +4,10 @@ import pandas as pd
 from streamlit_option_menu import option_menu
 import plotly.express as px
 from PIL import Image
-from collections import namedtuple
-from math import radians, isclose, acos, asin, cos, sin, tan, atan, degrees, sqrt
+from pathlib import Path
+import lasio
+import welly
+
 
 # Insert an icon
 icon = Image.open("Resources/logo.png")
@@ -54,3 +56,40 @@ st.subheader("**Qué son los registros de pozos?**")
 # Insert Image
 image = Image.open("Resources/concepto.png")
 st.image(image, width=100, use_container_width=True)
+
+# Importar archivo LAS
+uploaded_file = st.file_uploader("Sube un archivo LAS", type=["las"])
+
+if uploaded_file is not None:
+    try:
+        las = lasio.read(uploaded_file.read().decode("utf-8"))
+
+        st.write("### Información del archivo LAS")
+        st.write("Campo: Volve (Noruega)")
+        st.text(f"Versión LAS: {las.version[0].value}")
+        st.text(f"Nombre del pozo: {las.well.WELL.value}")
+
+        # Mostrar lista de curvas disponibles
+        st.write("### Curvas contenidas en el archivo")
+        st.text(", ".join(las.keys()))
+
+        # Convertir las curvas a un DataFrame
+        las_df = las.df()
+
+        # Mostrar una vista previa del DataFrame
+        st.write("### Datos del archivo LAS")
+        st.dataframe(las_df.head(10))
+
+        # Botón para descargar el DataFrame como CSV
+        csv = las_df.to_csv().encode('utf-8')
+        st.download_button(
+            label="Descargar datos como archivo CSV",
+            data=csv,
+            file_name="datos_volve.csv",
+            mime="text/csv",
+        )
+    except Exception as e:
+        st.error(f"No se pudo procesar el archivo LAS: {e}")
+else:
+    st.info("Por favor, carga un archivo LAS para continuar.")
+
