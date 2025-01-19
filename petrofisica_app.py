@@ -69,11 +69,11 @@ if uploaded_file is not None:
         st.text(f"Versión LAS: {las.version[0].value}")
         st.text(f"Nombre del pozo: {las.well.WELL.value}")
 
-        # Mostrar lista de curvas disponibles
-        st.write("### Curvas contenidas en el archivo")
+        # Mostrar el coentenido del archivo
+        st.write("### Contenido del archivo")
         st.text(", ".join(las.keys()))
 
-        # Convertir las curvas a un DataFrame
+        # Convertir el contenido a un DataFrame
         las_df = las.df()
 
         # Mostrar una vista previa del DataFrame
