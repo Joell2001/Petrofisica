@@ -139,6 +139,16 @@ if uploaded_file is not None:
         st.error(f"No se pudo procesar el archivo LAS: {e}")
 else:
     st.info("Por favor, carga un archivo LAS para continuar.")
+# Generar archivo requirements.txt
+with open('requirements.txt', 'w') as f:
+    f.write("streamlit\n")
+    f.write("pandas\n")
+    f.write("plotly\n")
+    f.write("Pillow\n")
+    f.write("lasio\n")
+    f.write("welly\n")
+    f.write("numpy\n")
+    f.write("matplotlib\n")
 
 
 
